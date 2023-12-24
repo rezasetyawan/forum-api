@@ -50,7 +50,7 @@ describe("HTTP server", () => {
       // Assert
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(200);
-      expect(responseJson.success).toEqual("success");
+      expect(responseJson.status).toEqual("success");
       expect(responseJson.message).toEqual("Hello world!");
     });
   });
