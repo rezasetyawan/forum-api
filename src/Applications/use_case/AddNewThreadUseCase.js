@@ -1,7 +1,8 @@
-const AddThread = require("../../Domains/threads/entities/AddThread");
+/* eslint-disable require-jsdoc */
+const AddThread = require('../../Domains/threads/entities/AddThread');
 
 class AddThreadUseCase {
-  constructor({ threadRepository }) {
+  constructor({threadRepository}) {
     this._threadRepository = threadRepository;
   }
 

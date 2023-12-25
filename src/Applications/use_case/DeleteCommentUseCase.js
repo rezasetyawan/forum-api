@@ -1,10 +1,11 @@
+/* eslint-disable require-jsdoc */
 class DeleteCommentUseCase {
-  constructor({ commentRepository }) {
+  constructor({commentRepository}) {
     this._commentRepository = commentRepository;
   }
 
   async execute(useCasePayload) {
-    const { id, threadId, owner } = useCasePayload;
+    const {id, threadId, owner} = useCasePayload;
 
     await this._commentRepository.isCommentExist(id, threadId);
     await this._commentRepository.verifyCommentOwner(id, owner);

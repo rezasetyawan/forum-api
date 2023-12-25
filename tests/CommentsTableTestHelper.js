@@ -1,16 +1,16 @@
 /* instanbul ignore file */
-const pool = require("../src/Infrastructures/database/postgres/pool");
+const pool = require('../src/Infrastructures/database/postgres/pool');
 
 const CommentsTableTestHelper = {
   async addComment({
-    id = "comment-123",
-    content = "some comment",
+    id = 'comment-123',
+    content = 'some comment',
     date = new Date().toISOString(),
-    owner = "user-123",
-    threadId = "thread-123",
+    owner = 'user-123',
+    threadId = 'thread-123',
   }) {
     const query = {
-      text: "INSERT INTO comments VALUES ($1, $2, $3, $4, $5)",
+      text: 'INSERT INTO comments VALUES ($1, $2, $3, $4, $5)',
       values: [id, content, owner, threadId, date],
     };
 
@@ -18,7 +18,7 @@ const CommentsTableTestHelper = {
   },
   async findUndeletedCommentById(id) {
     const query = {
-      text: "SELECT id FROM comments WHERE id = $1 AND is_delete = FALSE",
+      text: 'SELECT id FROM comments WHERE id = $1 AND is_delete = FALSE',
       values: [id],
     };
 
@@ -27,7 +27,7 @@ const CommentsTableTestHelper = {
   },
   async findCommentById(id) {
     const query = {
-      text: "SELECT * FROM comments WHERE id = $1",
+      text: 'SELECT * FROM comments WHERE id = $1',
       values: [id],
     };
 
@@ -35,7 +35,7 @@ const CommentsTableTestHelper = {
     return result.rows[0];
   },
   async cleanTable() {
-    await pool.query("DELETE FROM comments WHERE 1=1");
+    await pool.query('DELETE FROM comments WHERE 1=1');
   },
 };
 

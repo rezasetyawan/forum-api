@@ -1,8 +1,9 @@
-const AddComment = require("../../Domains/comments/entities/AddComment");
-const AddedComment = require("../../Domains/comments/entities/AddedComment");
+/* eslint-disable require-jsdoc */
+const AddComment = require('../../Domains/comments/entities/AddComment');
+const AddedComment = require('../../Domains/comments/entities/AddedComment');
 
 class AddCommentUseCase {
-  constructor({ threadRepository, commentRepository }) {
+  constructor({threadRepository, commentRepository}) {
     this._threadRepository = threadRepository;
     this._commentRepository = commentRepository;
   }

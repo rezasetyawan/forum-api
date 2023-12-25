@@ -1,17 +1,17 @@
 /* instanbul ignore file */
-const pool = require("../src/Infrastructures/database/postgres/pool");
+const pool = require('../src/Infrastructures/database/postgres/pool');
 
 const CommentRepliesTableTestHelper = {
   async addCommentReply({
-    id = "reply-123",
-    content = "some comment reply",
+    id = 'reply-123',
+    content = 'some comment reply',
     date = new Date().toISOString(),
-    owner = "user-123",
-    threadId = "thread-123",
-    commentId = "comment-123",
+    owner = 'user-123',
+    threadId = 'thread-123',
+    commentId = 'comment-123',
   }) {
     const query = {
-      text: "INSERT INTO comment_replies VALUES ($1, $2, $3, $4, $5, $6)",
+      text: 'INSERT INTO comment_replies VALUES ($1, $2, $3, $4, $5, $6)',
       values: [id, content, owner, commentId, threadId, date],
     };
 
@@ -19,7 +19,7 @@ const CommentRepliesTableTestHelper = {
   },
   async findUndeletedCommentReplyById(id) {
     const query = {
-      text: "SELECT id FROM comment_replies WHERE id = $1 AND is_delete = FALSE",
+      text: 'SELECT id FROM comment_replies WHERE id = $1 AND is_delete = FALSE',
       values: [id],
     };
 
@@ -28,7 +28,7 @@ const CommentRepliesTableTestHelper = {
   },
   async findCommentReplyById(id) {
     const query = {
-      text: "SELECT * FROM comment_replies WHERE id = $1",
+      text: 'SELECT * FROM comment_replies WHERE id = $1',
       values: [id],
     };
 
@@ -36,7 +36,7 @@ const CommentRepliesTableTestHelper = {
     return result.rows[0];
   },
   async cleanTable() {
-    await pool.query("DELETE FROM comment_replies WHERE 1=1");
+    await pool.query('DELETE FROM comment_replies WHERE 1=1');
   },
 };
 
