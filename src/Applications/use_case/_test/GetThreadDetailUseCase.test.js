@@ -1,3 +1,4 @@
+const CommentLikeRepository = require("../../../Domains/comment_likes/CommentLikeRepository");
 const CommentReplyRepository = require("../../../Domains/comment_replies/CommentReplyRepository");
 const CommentRepository = require("../../../Domains/comments/CommentRepository");
 const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
@@ -36,6 +37,7 @@ describe("GetThreadDetailUseCase", () => {
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
     const mockCommentReplyRepository = new CommentReplyRepository();
+    const mockCommentLikeRepository = new CommentLikeRepository();
 
     mockThreadRepository.isThreadExist = jest
       .fn()
@@ -97,10 +99,26 @@ describe("GetThreadDetailUseCase", () => {
         ])
       );
 
+    mockCommentLikeRepository.getCommentsLikeCountsByThreadId = jest.fn(() =>
+      Promise.resolve([
+        {
+          comment_id: "comment-123",
+          likes: 4,
+        },
+        {
+          comment_id: "comment-124",
+          likes: 2,
+        },
+      ])
+    );
+
     const threadCommentReplies =
       await mockCommentReplyRepository.getCommentRepliesByThreadId(
         "thread-123"
       );
+
+    const commentLikes =
+      await mockCommentLikeRepository.getCommentsLikeCountsByThreadId("thread-123");
 
     function getFilteredAndTransformedReplies(replies, commentId) {
       const filteredReplies = replies.filter(
@@ -132,6 +150,9 @@ describe("GetThreadDetailUseCase", () => {
         content: comment.is_delete
           ? "**komentar telah dihapus**"
           : comment.content,
+        likeCount: commentLikes.filter(
+          (like) => like.comment_id === comment.id
+        )[0].likes,
       };
     });
 
@@ -139,6 +160,7 @@ describe("GetThreadDetailUseCase", () => {
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
       commentReplyRepository: mockCommentReplyRepository,
+      commentLikeRepository: mockCommentLikeRepository,
     });
 
     const threadDetail = await getDetailThreadUseCase.execute(useCasePayload);
@@ -147,7 +169,11 @@ describe("GetThreadDetailUseCase", () => {
       ...thread,
       comments: expectedCommentResult,
     });
+
     expect(threadDetail.comments[0].replies).toHaveLength(2);
+    expect(threadDetail.comments[0].likeCount).toStrictEqual(4);
+    expect(threadDetail.comments[1].likeCount).toStrictEqual(2);
+
     expect(mockThreadRepository.getThreadDetailById).toBeCalledWith(
       useCasePayload.threadId
     );
@@ -157,12 +183,21 @@ describe("GetThreadDetailUseCase", () => {
     expect(
       mockCommentReplyRepository.getCommentRepliesByThreadId
     ).toBeCalledWith(useCasePayload.threadId);
+
     expect(mockThreadRepository.getThreadDetailById).toBeCalledTimes(1);
     expect(mockCommentRepository.getCommentsByThreadId).toBeCalledTimes(1);
 
     // expect to called two times because one for the use case and another one just for testing
     expect(
       mockCommentReplyRepository.getCommentRepliesByThreadId
+    ).toBeCalledTimes(2);
+
+    expect(mockCommentLikeRepository.getCommentsLikeCountsByThreadId).toBeCalledWith(
+      useCasePayload.threadId
+    );
+    // expect to called two times because one for the use case and another one just for testing
+    expect(
+      mockCommentLikeRepository.getCommentsLikeCountsByThreadId
     ).toBeCalledTimes(2);
   });
 });

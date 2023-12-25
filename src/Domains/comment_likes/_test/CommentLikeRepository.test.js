@@ -19,7 +19,7 @@ describe("CommentLikeRepository interface", () => {
     ).rejects.toThrowError("COMMENT_LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED");
 
     await expect(
-      commentLikeRepository.getCommentsLikeByThreadId('isnotandid')
+      commentLikeRepository.getCommentsLikeCountsByThreadId('isnotandid')
     ).rejects.toThrowError("COMMENT_LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED");
   });
 });

@@ -8,6 +8,7 @@ const ServerTestHelper = require("../../../../tests/ServerTestHelper");
 const AuthenticationsTableTestHelper = require("../../../../tests/AuthenticationsTableTestHelper");
 const CommentsTableTestHelper = require("../../../../tests/CommentsTableTestHelper");
 const CommentRepliesTableTestHelper = require("../../../../tests/CommentRepliesTableTestHelper");
+const CommentLikesTableTestHelper = require("../../../../tests/CommentLikesTableTestHelper");
 
 describe("/threads endpoint", () => {
   afterEach(async () => {
@@ -64,7 +65,6 @@ describe("/threads endpoint", () => {
         },
       });
 
-
       // Asert
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(400);
@@ -85,7 +85,6 @@ describe("/threads endpoint", () => {
 
       const { accessToken } =
         await ServerTestHelper.getAccessTokenAndUserIdHelper({ server });
-
 
       // Action
       const response = await server.inject({
@@ -117,7 +116,6 @@ describe("/threads endpoint", () => {
 
       const { accessToken } =
         await ServerTestHelper.getAccessTokenAndUserIdHelper({ server });
-
 
       // Action
       const response = await server.inject({
@@ -151,7 +149,6 @@ describe("/threads endpoint", () => {
         url: "/threads/thread-123",
       });
 
-
       // Asert
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(404);
@@ -165,6 +162,7 @@ describe("/threads endpoint", () => {
       await ThreadsTableTestHelper.addThread({});
       await CommentsTableTestHelper.addComment({});
       await CommentRepliesTableTestHelper.addCommentReply({});
+      await CommentLikesTableTestHelper.addCommentLike({});
 
       const server = await createServer(container);
 
@@ -174,7 +172,6 @@ describe("/threads endpoint", () => {
         url: `/threads/thread-123`,
       });
 
-
       // Action
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(200);
@@ -183,6 +180,8 @@ describe("/threads endpoint", () => {
       expect(responseJson.data.thread.comments).toHaveLength(1);
       expect(responseJson.data.thread.comments[0].replies).toBeDefined();
       expect(responseJson.data.thread.comments[0].replies).toHaveLength(1);
+      expect(responseJson.data.thread.comments[0].likeCount).toBeDefined();
+      expect(responseJson.data.thread.comments[0].likeCount).toEqual(1);
     });
   });
 });
