@@ -1,34 +1,34 @@
-const AddedCommentReply = require("../AddedCommentReply");
+const AddedCommentReply = require('../AddedCommentReply');
 
-describe("an AddedCommentReply entity", () => {
-  it("should throw error if payload doesn't have needed property", () => {
+describe('an AddedCommentReply entity', () => {
+  it('should throw error if payload doesn\'t have needed property', () => {
     const payload = {
-      content: "test thread comment",
-      owner: "user-123",
+      content: 'test thread comment',
+      owner: 'user-123',
     };
 
     expect(() => new AddedCommentReply(payload)).toThrowError(
-      "ADDED_COMMENT_REPLY.NOT_CONTAIN_NEEDED_PROPERTY"
+        'ADDED_COMMENT_REPLY.NOT_CONTAIN_NEEDED_PROPERTY',
     );
   });
 
-  it("should throw error when payload has invalid data type", () => {
+  it('should throw error when payload has invalid data type', () => {
     const payload = {
-      content: "test thread comment",
+      content: 'test thread comment',
       owner: {},
-      id: "reply-123",
+      id: 'reply-123',
     };
 
     expect(() => new AddedCommentReply(payload)).toThrowError(
-      "ADDED_COMMENT_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION"
+        'ADDED_COMMENT_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION',
     );
   });
 
-  it("should create addedCommentReply object correctly", () => {
+  it('should create addedCommentReply object correctly', () => {
     const payload = {
-      content: "test thread comment",
-      owner: "user-123",
-      id: "reply-123",
+      content: 'test thread comment',
+      owner: 'user-123',
+      id: 'reply-123',
     };
 
     const addedCommentReply = new AddedCommentReply(payload);

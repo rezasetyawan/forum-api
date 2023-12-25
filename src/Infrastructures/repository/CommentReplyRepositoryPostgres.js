@@ -1,7 +1,7 @@
-const AuthorizationError = require("../../Commons/exceptions/AuthorizationError");
-const NotFoundError = require("../../Commons/exceptions/NotFoundError");
-const CommentReplyRepository = require("../../Domains/comment_replies/CommentReplyRepository");
-const AddedCommentReply = require("../../Domains/comment_replies/entities/AddedCommentReply");
+const AuthorizationError = require('../../Commons/exceptions/AuthorizationError');
+const NotFoundError = require('../../Commons/exceptions/NotFoundError');
+const CommentReplyRepository = require('../../Domains/comment_replies/CommentReplyRepository');
+const AddedCommentReply = require('../../Domains/comment_replies/entities/AddedCommentReply');
 
 class CommentReplyRepositoryPostgres extends CommentReplyRepository {
   constructor(pool, idGenerator) {
@@ -11,11 +11,11 @@ class CommentReplyRepositoryPostgres extends CommentReplyRepository {
   }
 
   async addCommentReply(newComment) {
-    const { content, owner, threadId, commentId } = newComment;
+    const {content, owner, threadId, commentId} = newComment;
     const id = `reply-${this._idGenerator(16)}`;
     const date = new Date().toISOString();
     const query = {
-      text: "INSERT INTO comment_replies VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, content, owner",
+      text: 'INSERT INTO comment_replies VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, content, owner',
       values: [id, content, owner, commentId, threadId, date],
     };
 
@@ -25,41 +25,41 @@ class CommentReplyRepositoryPostgres extends CommentReplyRepository {
 
   async isCommentReplyExist(id, threadId) {
     const query = {
-      text: "SELECT id FROM comment_replies WHERE id = $1 AND thread_id = $2",
+      text: 'SELECT id FROM comment_replies WHERE id = $1 AND thread_id = $2',
       values: [id, threadId],
     };
 
     const result = await this._pool.query(query);
 
     if (!result.rowCount) {
-      throw new NotFoundError("Komentar balasan tidak ditemukan");
+      throw new NotFoundError('Komentar balasan tidak ditemukan');
     }
   }
 
   async verifyCommentReplyOwner(id, owner) {
     const query = {
-      text: "SELECT id, owner FROM comment_replies WHERE id = $1",
+      text: 'SELECT id, owner FROM comment_replies WHERE id = $1',
       values: [id],
     };
 
     const result = await this._pool.query(query);
 
     if (!result.rowCount) {
-      throw new NotFoundError("Komentar balasan tidak ditemukan");
+      throw new NotFoundError('Komentar balasan tidak ditemukan');
     }
 
     const commentReply = result.rows[0];
 
     if (commentReply.owner !== owner) {
       throw new AuthorizationError(
-        "Anda bukan pemilik dari komentar balasan tersebut"
+          'Anda bukan pemilik dari komentar balasan tersebut',
       );
     }
   }
 
   async deleteCommentReplyById(id) {
     const query = {
-      text: "UPDATE comment_replies SET is_delete = TRUE WHERE id = $1",
+      text: 'UPDATE comment_replies SET is_delete = TRUE WHERE id = $1',
       values: [id],
     };
 
@@ -67,7 +67,7 @@ class CommentReplyRepositoryPostgres extends CommentReplyRepository {
 
     if (!result.rowCount) {
       throw new NotFoundError(
-        "Gagal menghapus komentar balasan, komentar balasan tidak ditemukan"
+          'Gagal menghapus komentar balasan, komentar balasan tidak ditemukan',
       );
     }
   }

@@ -1,11 +1,11 @@
-const CommentLikesTableTestHelper = require("../../../../tests/CommentLikesTableTestHelper");
-const CommentsTableTestHelper = require("../../../../tests/CommentsTableTestHelper");
-const ThreadsTableTestHelper = require("../../../../tests/ThreadsTableTestHelper");
-const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
-const pool = require("../../database/postgres/pool");
-const CommentLikeRepositoryPostgres = require("../CommentLikeRepositoryPostgres");
+const CommentLikesTableTestHelper = require('../../../../tests/CommentLikesTableTestHelper');
+const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
+const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
+const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
+const pool = require('../../database/postgres/pool');
+const CommentLikeRepositoryPostgres = require('../CommentLikeRepositoryPostgres');
 
-describe("CommentLikeRepositoryPostgres", () => {
+describe('CommentLikeRepositoryPostgres', () => {
   beforeEach(async () => {
     await UsersTableTestHelper.addUser({});
     await ThreadsTableTestHelper.addThread({});
@@ -23,87 +23,87 @@ describe("CommentLikeRepositoryPostgres", () => {
     await pool.end();
   });
 
-  describe("likeComment function", () => {
-    it("should add like comment correctly", async () => {
+  describe('likeComment function', () => {
+    it('should add like comment correctly', async () => {
       // Arrange
-      const fakeIdGenerator = () => "123";
+      const fakeIdGenerator = () => '123';
 
       const commentLikeRepositoryPostgres = new CommentLikeRepositoryPostgres(
-        pool,
-        fakeIdGenerator
+          pool,
+          fakeIdGenerator,
       );
 
       // Action
       await commentLikeRepositoryPostgres.likeComment(
-        "comment-123",
-        "user-123"
+          'comment-123',
+          'user-123',
       );
 
       // Assert
       const likes = await CommentLikesTableTestHelper.getCommentLike(
-        "comment-123",
-        "user-123"
+          'comment-123',
+          'user-123',
       );
       expect(likes).toHaveLength(1);
     });
   });
 
-  describe("unlikeComment function", () => {
-    it("should unlike comment correctly", async () => {
+  describe('unlikeComment function', () => {
+    it('should unlike comment correctly', async () => {
       // Arrange
       await CommentLikesTableTestHelper.addCommentLike({});
 
       const commentLikeRepositoryPostgres = new CommentLikeRepositoryPostgres(
-        pool,
-        () => {}
+          pool,
+          () => {},
       );
 
       // Action
       await commentLikeRepositoryPostgres.unlikeComment(
-        "comment-123",
-        "user-123"
+          'comment-123',
+          'user-123',
       );
 
       // Assert
       const likes = await CommentLikesTableTestHelper.getCommentLike(
-        "comment-123",
-        "user-123"
+          'comment-123',
+          'user-123',
       );
       expect(likes).toHaveLength(0);
     });
   });
 
-  describe("isCommentLiked function", () => {
-    it("should return rowCount correctly when like is available", async () => {
+  describe('isCommentLiked function', () => {
+    it('should return rowCount correctly when like is available', async () => {
       // Arrange
       await CommentLikesTableTestHelper.addCommentLike({});
 
       const commentLikeRepositoryPostgres = new CommentLikeRepositoryPostgres(
-        pool,
-        () => {}
+          pool,
+          () => {},
       );
 
       // Action
       const isCommentLiked = await commentLikeRepositoryPostgres.isCommentLiked(
-        "comment-123",
-        "user-123"
+          'comment-123',
+          'user-123',
       );
 
       // Assert
       expect(isCommentLiked).toEqual(true);
     });
 
-    it("should return rowCount correctly when like not available", async () => {
+    it('should return rowCount correctly when like not available', async () => {
       // Arrange
       const commentLikeRepositoryPostgres = new CommentLikeRepositoryPostgres(
-        pool,
-        () => {}
+          pool,
+          () => {},
       );
 
       // Action
       const isCommentLiked = await commentLikeRepositoryPostgres.isCommentLiked(
-        "comment-123",
-        "user-123"
+          'comment-123',
+          'user-123',
       );
 
       // Assert
@@ -111,70 +111,70 @@ describe("CommentLikeRepositoryPostgres", () => {
     });
   });
 
-  describe("getCommentLikesCountByThreadId function", () => {
-    it("should return an empty array when thread has no comment", async () => {
+  describe('getCommentLikesCountByThreadId function', () => {
+    it('should return an empty array when thread has no comment', async () => {
       // Arange
       await CommentsTableTestHelper.cleanTable();
       await CommentLikesTableTestHelper.cleanTable();
       const commentLikeRepositoryPostgres = new CommentLikeRepositoryPostgres(
-        pool,
-        {}
+          pool,
+          {},
       );
 
       // Action
       const result =
         await commentLikeRepositoryPostgres.getCommentsLikeCountsByThreadId(
-          "thread-123"
+            'thread-123',
         );
 
       // Asert
       expect(result).toStrictEqual([]);
     });
 
-    it("should return all the comments likes", async () => {
+    it('should return all the comments likes', async () => {
       // Arange
       await CommentLikesTableTestHelper.addCommentLike({});
 
       const expectedResult = [
         {
           likes: 1,
-          comment_id: "comment-123",
+          comment_id: 'comment-123',
         },
       ];
 
       const commentLikeRepositoryPostgres = new CommentLikeRepositoryPostgres(
-        pool,
-        {}
+          pool,
+          {},
       );
 
       // Action
       const result =
         await commentLikeRepositoryPostgres.getCommentsLikeCountsByThreadId(
-          "thread-123"
+            'thread-123',
         );
 
       // Asert
       expect(result).toStrictEqual(expectedResult);
     });
 
-    it("should return all the comments with no like", async () => {
+    it('should return all the comments with no like', async () => {
       // Arange
       const expectedResult = [
         {
           likes: 0,
-          comment_id: "comment-123",
+          comment_id: 'comment-123',
         },
       ];
 
       const commentLikeRepositoryPostgres = new CommentLikeRepositoryPostgres(
-        pool,
-        {}
+          pool,
+          {},
       );
 
       // Action
       const result =
         await commentLikeRepositoryPostgres.getCommentsLikeCountsByThreadId(
-          "thread-123"
+            'thread-123',
         );
 
       // Result

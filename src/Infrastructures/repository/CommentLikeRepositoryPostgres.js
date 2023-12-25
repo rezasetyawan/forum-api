@@ -1,4 +1,4 @@
-const CommentLikeRepository = require("../../Domains/comment_likes/CommentLikeRepository");
+const CommentLikeRepository = require('../../Domains/comment_likes/CommentLikeRepository');
 
 class CommentLikeRepositoryPostgres extends CommentLikeRepository {
   constructor(pool, idGenerator) {
@@ -10,7 +10,7 @@ class CommentLikeRepositoryPostgres extends CommentLikeRepository {
   async likeComment(commentId, owner) {
     const id = `comment_like-${this._idGenerator(16)}`;
     const query = {
-      text: "INSERT INTO user_comment_likes VALUES ($1, $2, $3)",
+      text: 'INSERT INTO user_comment_likes VALUES ($1, $2, $3)',
       values: [id, owner, commentId],
     };
 
@@ -19,7 +19,7 @@ class CommentLikeRepositoryPostgres extends CommentLikeRepository {
 
   async unlikeComment(commentId, owner) {
     const query = {
-      text: "DELETE FROM user_comment_likes WHERE comment_id = $1 AND user_id = $2",
+      text: 'DELETE FROM user_comment_likes WHERE comment_id = $1 AND user_id = $2',
       values: [commentId, owner],
     };
 
@@ -28,11 +28,11 @@ class CommentLikeRepositoryPostgres extends CommentLikeRepository {
 
   async isCommentLiked(commentId, owner) {
     const query = {
-      text: "SELECT id FROM user_comment_likes WHERE comment_id = $1 AND user_id = $2",
+      text: 'SELECT id FROM user_comment_likes WHERE comment_id = $1 AND user_id = $2',
       values: [commentId, owner],
     };
 
-    const { rowCount } = await this._pool.query(query);
+    const {rowCount} = await this._pool.query(query);
     // return a number
     if (rowCount) return true;
     return false;

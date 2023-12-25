@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 class GetThreadDetailUseCase {
   constructor({
     threadRepository,
@@ -12,12 +13,12 @@ class GetThreadDetailUseCase {
   }
 
   async execute(useCasePayload) {
-    const { threadId } = useCasePayload;
+    const {threadId} = useCasePayload;
 
     await this._threadRepository.isThreadExist(threadId);
     const thread = await this._threadRepository.getThreadDetailById(threadId);
     const threadComments = await this._commentRepository.getCommentsByThreadId(
-      threadId
+        threadId,
     );
 
     const threadCommentReplies =
@@ -25,19 +26,19 @@ class GetThreadDetailUseCase {
 
     const commentLikes =
       await this._commentLikeRepository.getCommentsLikeCountsByThreadId(
-        threadId
+          threadId,
       );
 
     function getFilteredAndTransformedReplies(replies, commentId) {
       const filteredReplies = replies.filter(
-        (reply) => reply.comment_id === commentId
+          (reply) => reply.comment_id === commentId,
       );
       const transformedReplies = filteredReplies.map((reply) => {
         return {
           id: reply.id,
-          content: reply.is_delete
-            ? "**balasan telah dihapus**"
-            : reply.content,
+          content: reply.is_delete ?
+            '**balasan telah dihapus**' :
+            reply.content,
           date: reply.date,
           username: reply.username,
         };
@@ -52,12 +53,12 @@ class GetThreadDetailUseCase {
         username: comment.username,
         date: comment.date,
         replies: getFilteredAndTransformedReplies(
-          threadCommentReplies,
-          comment.id
+            threadCommentReplies,
+            comment.id,
         ),
-        content: comment.is_delete
-          ? "**komentar telah dihapus**"
-          : comment.content,
+        content: comment.is_delete ?
+          '**komentar telah dihapus**' :
+          comment.content,
       };
     });
 
@@ -66,12 +67,12 @@ class GetThreadDetailUseCase {
         return {
           ...comment,
           likeCount: commentLikes.filter(
-            (like) => like.comment_id === comment.id
+              (like) => like.comment_id === comment.id,
           )[0].likes,
         };
       });
 
-    return { ...thread, comments: transformedThreadCommentsWithLikeCount };
+    return {...thread, comments: transformedThreadCommentsWithLikeCount};
   }
 }
 

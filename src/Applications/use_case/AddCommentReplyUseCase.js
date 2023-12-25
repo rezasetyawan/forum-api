@@ -1,8 +1,9 @@
-const AddCommentReply = require("../../Domains/comment_replies/entities/AddCommentReply");
-const AddedCommentReply = require("../../Domains/comment_replies/entities/AddedCommentReply");
+/* eslint-disable require-jsdoc */
+const AddCommentReply = require('../../Domains/comment_replies/entities/AddCommentReply');
+const AddedCommentReply = require('../../Domains/comment_replies/entities/AddedCommentReply');
 
 class AddCommentReplyUseCase {
-  constructor({ threadRepository, commentRepository, commentReplyRepository }) {
+  constructor({threadRepository, commentRepository, commentReplyRepository}) {
     this._threadRepository = threadRepository;
     this._commentRepository = commentRepository;
     this._commentReplyRepository = commentReplyRepository;
@@ -12,8 +13,8 @@ class AddCommentReplyUseCase {
     const newCommentReply = new AddCommentReply(useCasePayload);
     await this._threadRepository.isThreadExist(useCasePayload.threadId);
     await this._commentRepository.isCommentExist(
-      useCasePayload.commentId,
-      useCasePayload.threadId
+        useCasePayload.commentId,
+        useCasePayload.threadId,
     );
 
     const addedCommentReply =

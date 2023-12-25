@@ -2,7 +2,7 @@ class ThreadDetail {
   constructor(payload) {
     this._verifypayload(payload);
 
-    const { id, title, body, date, username, comments } = payload;
+    const {id, title, body, date, username, comments} = payload;
     this.id = id;
     this.title = title;
     this.body = body;
@@ -11,20 +11,20 @@ class ThreadDetail {
     this.comments = comments;
   }
 
-  _verifypayload({ id, title, body, date, username, comments }) {
+  _verifypayload({id, title, body, date, username, comments}) {
     if ((!id || !title || !body || !date || !username, !comments)) {
-      throw new Error("GET_THREAD_DETAIL.NOT_CONTAIN_NEEDED_PROPERTY");
+      throw new Error('GET_THREAD_DETAIL.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
     if (
-      typeof id !== "string" ||
-      typeof title !== "string" ||
-      typeof body !== "string" ||
-      typeof date !== "string" ||
-      typeof username !== "string" ||
+      typeof id !== 'string' ||
+      typeof title !== 'string' ||
+      typeof body !== 'string' ||
+      typeof date !== 'string' ||
+      typeof username !== 'string' ||
       !Array.isArray(comments)
     ) {
-      throw new Error("GET_THREAD_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION");
+      throw new Error('GET_THREAD_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }
 }

@@ -1,34 +1,34 @@
-const AddedThread = require("../AddedThread");
+const AddedThread = require('../AddedThread');
 
-describe("an AddedThread entity", () => {
-  it("should throw error if payload does not meet criteria", () => {
+describe('an AddedThread entity', () => {
+  it('should throw error if payload does not meet criteria', () => {
     const payload = {
-      id: "thread-1",
-      title: "test thread",
+      id: 'thread-1',
+      title: 'test thread',
     };
 
     expect(() => new AddedThread(payload)).toThrowError(
-      "ADDED_THREAD.NOT_CONTAIN_NEEDED_PROPERTY"
+        'ADDED_THREAD.NOT_CONTAIN_NEEDED_PROPERTY',
     );
   });
 
-  it("should throw error when payload has invalid data type", () => {
+  it('should throw error when payload has invalid data type', () => {
     const payload = {
-      id: "thread-1",
+      id: 'thread-1',
       title: 121212,
       owner: {},
     };
 
     expect(() => new AddedThread(payload)).toThrowError(
-      "ADDED_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION"
+        'ADDED_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION',
     );
   });
 
-  it("should create AddedThread object correctly", () => {
+  it('should create AddedThread object correctly', () => {
     const payload = {
-      id: "thread-1",
-      title: "test thread",
-      owner: "lagi test thread banh",
+      id: 'thread-1',
+      title: 'test thread',
+      owner: 'lagi test thread banh',
     };
 
     const addedThread = new AddedThread(payload);

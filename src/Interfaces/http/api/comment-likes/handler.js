@@ -1,4 +1,4 @@
-const LikeAndUnlikeUseCommentCase = require("../../../../Applications/use_case/LikeAndUnlikeCommentUseCase");
+const LikeAndUnlikeUseCommentCase = require('../../../../Applications/use_case/LikeAndUnlikeCommentUseCase');
 
 class CommentLikesHandler {
   constructor(container) {
@@ -8,7 +8,7 @@ class CommentLikesHandler {
   }
 
   async putCommentLikeByIdHandler(request, h) {
-    const { threadId, commentId } = request.params;
+    const {threadId, commentId} = request.params;
     const payload = {
       threadId: threadId,
       commentId: commentId,
@@ -16,16 +16,16 @@ class CommentLikesHandler {
     };
 
     const likeAndUnlikeCommentUseCase = this._container.getInstance(
-      LikeAndUnlikeUseCommentCase.name
+        LikeAndUnlikeUseCommentCase.name,
     );
 
     await likeAndUnlikeCommentUseCase.execute(payload);
 
     return h
-      .response({
-        status: "success",
-      })
-      .code(200);
+        .response({
+          status: 'success',
+        })
+        .code(200);
   }
 }
 
