@@ -1,8 +1,14 @@
 class GetThreadDetailUseCase {
-  constructor({ threadRepository, commentRepository, commentReplyRepository }) {
+  constructor({
+    threadRepository,
+    commentRepository,
+    commentReplyRepository,
+    commentLikeRepository,
+  }) {
     this._threadRepository = threadRepository;
     this._commentRepository = commentRepository;
     this._commentReplyRepository = commentReplyRepository;
+    this._commentLikeRepository = commentLikeRepository;
   }
 
   async execute(useCasePayload) {
@@ -16,6 +22,11 @@ class GetThreadDetailUseCase {
 
     const threadCommentReplies =
       await this._commentReplyRepository.getCommentRepliesByThreadId(threadId);
+
+    const commentLikes =
+      await this._commentLikeRepository.getCommentsLikeCountsByThreadId(
+        threadId
+      );
 
     function getFilteredAndTransformedReplies(replies, commentId) {
       const filteredReplies = replies.filter(
@@ -50,7 +61,17 @@ class GetThreadDetailUseCase {
       };
     });
 
-    return { ...thread, comments: transformedThreadComments };
+    const transformedThreadCommentsWithLikeCount =
+      transformedThreadComments.map((comment) => {
+        return {
+          ...comment,
+          likeCount: commentLikes.filter(
+            (like) => like.comment_id === comment.id
+          )[0].likes,
+        };
+      });
+
+    return { ...thread, comments: transformedThreadCommentsWithLikeCount };
   }
 }
 
